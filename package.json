@@ -1,0 +1,21 @@
+{
+  "name": "blitzman",
+  "version": "1.0.0",
+  "description": "API TESTER",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artyuiop/Blitzman.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/artyuiop/Blitzman/issues"
+  },
+  "homepage": "https://github.com/artyuiop/Blitzman#readme"
+}
