@@ -3,6 +3,16 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+function registerIpcHandlers(): void {
+  ipcMain.handle('app:get-versions', () => {
+    return {
+      electron: process.versions.electron,
+      chrome: process.versions.chrome,
+      node: process.versions.node
+    }
+  })
+}
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -13,12 +23,18 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
     }
   })
 
+
+  // กับการโหลดเนื้อหาของหน้าต่างหลัก มันจะกระพิบ
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+    mainWindow.webContents.openDevTools()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -52,6 +68,7 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  registerIpcHandlers()
   createWindow()
 
   app.on('activate', function () {

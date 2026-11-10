@@ -1,7 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+type AppVersions = Awaited<ReturnType<typeof window.api.getVersions>>
 
 function Versions(): React.JSX.Element {
-  const [versions] = useState(window.electron.process.versions)
+  const [versions, setVersions] = useState<AppVersions | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    window.api
+      .getVersions()
+      .then((result) => {
+        setVersions(result)
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to get app versions:', error)
+        setError('Unable to load application versions')
+      })
+  }, [])
+
+  if (error) {
+    return <p>{error}</p>
+  }
+
+  if (!versions) {
+    return <p>Loading versions...</p>
+  }
 
   return (
     <ul className="versions">
